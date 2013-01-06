@@ -1,4 +1,4 @@
-Spine
+Arduino IMU
 =========
 
 Arduino sensor-fusion firmware for estimating orientation using accelerometers, rate-gyroscopes, and magnetometers.
@@ -19,4 +19,3 @@ Joseph Malloch 2011
 [2]: http://www.youtube.com/watch?v=-Dqvf1CXPWg
 [3]: http://store.ckdevices.com/products/Mongoose-9DoF-IMU-with-Barometric-Pressure-Sensor-.html
 [2]: http://idmil.org
-
