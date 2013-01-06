@@ -38,7 +38,7 @@ void SPI_SLAVE_Init(void) {
   pinMode(SPI_MOSI,INPUT);
   pinMode(SPI_SS,INPUT);
   pinMode(SPI_MISO,OUTPUT);
-  
+
   // INIT interface, Master, set clock rate fck/4
   SPCR = (1<<SPE)|(0<<SPR0)|(0<<SPR1);
   // enable double rate
@@ -76,7 +76,7 @@ void loop(){
   digitalWrite(7,theByte & (1<<5));
   digitalWrite(8,theByte & (1<<6));
   digitalWrite(9,theByte & (1<<7));
-  
+
   theByte=SPI_ReadWrite(theByte);
 }
 */

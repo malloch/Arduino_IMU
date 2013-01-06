@@ -1,11 +1,18 @@
-/*
- *  imu.c
- *  orient
- *
- *  Created by malloch on 11-12-15.
- *  Copyright 2011 Joseph Malloch / Input Devices and Music Interaction Laboratory. All rights reserved.
- *
- */
+/**************************************************************************
+ *                                                                         *
+ * Sensor Fusion code for estimating orientation of Arduino-based IMU      *
+ * 2011 Joseph Malloch / Input Devices and Music Interaction Laboratory    *
+ *                                                                         *
+ ***************************************************************************
+ *                                                                         *
+ * This program is free software; you can redistribute it and/or modify    *
+ * it under the terms of the GNU License.                                  *
+ * This program is distributed in the hope that it will be useful,         *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ * GNU License V2 for more details.                                        *
+ *                                                                         *
+ ***************************************************************************/
 
 #include "imu.h"
 
@@ -24,7 +31,7 @@ void sensor_fusion(t_quaternion *orientation, t_axes *accel, t_axes *mag, t_axes
     accel->tilt = atan2(accel->x, accel->magnitude);
     accel->magnitude = sqrt(pow(accel->x, 2) + pow(accel->magnitude, 2));
     accel->magnitude *= 0.00390625;
-    
+
     // calculate accelerometer quaternions
     t_quaternion qar, qar_inv, qat, qat_inv, qa;
     qar.w = cos(accel->roll * 0.5);
@@ -36,12 +43,12 @@ void sensor_fusion(t_quaternion *orientation, t_axes *accel, t_axes *mag, t_axes
     qat.y = qat.z = 0;
     quaternion_inverse(&qat, &qat_inv);
     quaternion_multiply(&qat, &qar, &qa);
-    
+
     // calculate polar representation of magnetometer data
     mag->roll = atan2(mag->z, mag->y) - PI;
     mag->magnitude = sqrt(pow(mag->z, 2) + pow(mag->y, 2));
     mag->tilt = atan2(mag->x, mag->magnitude);
-    
+
     // calculate magnetometer quaternions
     t_quaternion qmr, qmt, qm;
     qmr.w = cos(mag->roll * 0.5);
@@ -51,26 +58,26 @@ void sensor_fusion(t_quaternion *orientation, t_axes *accel, t_axes *mag, t_axes
     qmt.x = sin(mag->tilt * 0.5);
     qmt.y = qmt.z = 0;
     quaternion_multiply(&qmt, &qmr, &qm);
-    
+
     // rotate the magnetometer quaternion
     quaternion_multiply(&qm, &qar_inv, &qm);
     quaternion_multiply(&qm, &qat_inv, &qm);
-    
+
     // extract azimuth
     double azimuth = atan2(qm.x, qm.y) + PI;
     if (qm.w > 0.)
         azimuth += PI;
     azimuth = fmod(azimuth, twoPI) - PI;
-    
+
     // replace qm with just azimuth
     qm.w = cos(azimuth * 0.5);
     qm.x = qm.y = 0;
     qm.z = sin(azimuth * 0.5);
-    
+
     // construct quaternion from combined accelerometer and magnetometer azimuth data
     t_quaternion qam;
     quaternion_multiply(&qm, &qa, &qam);
-    
+
     // construct quaternion from gyroscope axes
     t_quaternion qg;
     qg.w = cos((gyro->x + gyro->y + gyro->z) * 0.5);
@@ -90,7 +97,7 @@ void sensor_fusion(t_quaternion *orientation, t_axes *accel, t_axes *mag, t_axes
      weight = weight < 0.9999 ? weight : 0.9999;
      }
      */
-    
+
     // complementary filter:
     // integrate latest gyro quaternion with stored orientation
     quaternion_multiply(orientation, &qg, orientation);
@@ -98,7 +105,7 @@ void sensor_fusion(t_quaternion *orientation, t_axes *accel, t_axes *mag, t_axes
     t_quaternion delayed;
     quaternion_copy(orientation, &delayed);
     quaternion_slerp(&qam, orientation, orientation, weight);
-    
+
     // use the shortest distance from previous orientation
     quaternion_minimum_distance(&delayed, orientation);
 }
@@ -164,22 +171,22 @@ void quaternion_slerp(t_quaternion *l, t_quaternion *r, t_quaternion *o, double 
         quaternion_normalize(o);
         return;
     }
-    
+
     if (dot > 1)
         dot = 1;
     else if (dot < -1)
         dot = -1;
-    
+
     double theta_0 = acos(dot);
     double theta = (0. < theta_0 && theta_0 < halfPI) ? theta_0 * weight : (theta_0 - PI) * weight;
-    
+
     o->w = r->w - l->w * dot;
     o->x = r->x - l->x * dot;
     o->y = r->y - l->y * dot;
     o->z = r->z - l->z * dot;
-    
+
     quaternion_normalize(o);
-    
+
     o->w = l->w * cos(theta) + o->w * sin(theta);
     o->x = l->x * cos(theta) + o->x * sin(theta);
     o->y = l->y * cos(theta) + o->y * sin(theta);

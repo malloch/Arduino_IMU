@@ -1,10 +1,25 @@
-void checkSerial() { 
+/**************************************************************************
+ *                                                                         *
+ * Application routines for Arduino-based IMU                              *
+ *                                                                         *
+ ***************************************************************************
+ *                                                                         *
+ * This program is free software; you can redistribute it and/or modify    *
+ * it under the terms of the GNU License.                                  *
+ * This program is distributed in the hope that it will be useful,         *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ * GNU License V2 for more details.                                        *
+ *                                                                         *
+ ***************************************************************************/
+
+void checkSerial() {
   if(!Serial.available())
     return;
 
   char c = Serial.read();
-  
-  switch (c) {       
+
+  switch (c) {
     case 'p':          // poll message, for now as fast as possible
       polled = 1;
       break;
@@ -64,7 +79,7 @@ void readAccelerometer() {
   accel.x = (double)temp[0] * accel_calibration[0][2] + accel_calibration[0][3];
   accel.z = (double)temp[1] * accel_calibration[1][2] + accel_calibration[1][3];
   accel.y = (double)temp[2] * accel_calibration[2][2] + accel_calibration[2][3];
-  
+
   accel.x *= -1.0;
 }
 
@@ -83,7 +98,7 @@ double compute_offset(double src_min, double src_max, double dest_min, double de
 boolean readSettings() {
   byte written;
   int n = EEPROM_readAnything(0, written);    //checks if any data written before overwriting defaults
-  
+
   if (written == 100) {
     n = EEPROM_readAnything(n, accel_calibration);
     n = EEPROM_readAnything(n, mag_calibration);
@@ -93,7 +108,7 @@ boolean readSettings() {
 boolean writeSettings() {
   byte written = 100;
   int n = EEPROM_writeAnything(0, written);
-  
+
   n = EEPROM_writeAnything(n, accel_calibration);
   n = EEPROM_writeAnything(n, mag_calibration);
 }
@@ -102,7 +117,7 @@ void StatusLEDToggle()
 {
   static unsigned int counter = 0;
   static char state = 0;
-  
+
   counter++;
   if (counter > 20)
   {
@@ -117,6 +132,6 @@ void StatusLEDToggle()
       digitalWrite(STATUS_LED,HIGH);
       state = 1;
     }
- 
+
   }
 }

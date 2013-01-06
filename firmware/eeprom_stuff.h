@@ -1,3 +1,5 @@
+/* EEPROM read/write functions adapted from code by Halley @arduino.cc */
+
 #include <WProgram.h>
 
 template <class T> int EEPROM_writeAnything(int ee, const T& value)

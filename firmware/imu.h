@@ -1,11 +1,18 @@
-/*
- *  imu.h
- *  orient
- *
- *  Created by malloch on 11-12-15.
- *  Copyright 2011 Joseph Malloch / Input Devices and Music Interaction Laboratory. All rights reserved.
- *
- */
+/**************************************************************************
+ *                                                                         *
+ * Sensor Fusion code for estimating orientation of Arduino-based IMU      *
+ * 2011 Joseph Malloch / Input Devices and Music Interaction Laboratory    *
+ *                                                                         *
+ ***************************************************************************
+ *                                                                         *
+ * This program is free software; you can redistribute it and/or modify    *
+ * it under the terms of the GNU License.                                  *
+ * This program is distributed in the hope that it will be useful,         *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
+ * GNU License V2 for more details.                                        *
+ *                                                                         *
+ ***************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {

@@ -48,7 +48,7 @@ unsigned char *gyro_remote2_bytes = (unsigned char *)&gyro_remote2;
 unsigned char *mag_bytes = (unsigned char *)&mag;
 unsigned char *mag_remote1_bytes = (unsigned char *)&mag_remote1;
 unsigned char *mag_remote2_bytes = (unsigned char *)&mag_remote2;
- 
+
 double accel_calibration[3][4] = {{0, 0, 1, 0},
                                   {0, 0, 1, 0},
                                   {0, 0, 1, 0}};
@@ -70,16 +70,16 @@ byte polled = 0;
 byte counter = 0;
 
 void setup()
-{ 
+{
   //readSettings();
-  
+
   if (IS_SPI_MASTER) {
     if (XBEE_COMMS)
       Serial.begin(57600);
     else
       Serial.begin(115200);
   }
-  
+
   pinMode (STATUS_LED, OUTPUT);  // Status LED
 
   Wire.begin();    //Init the I2C
@@ -98,9 +98,9 @@ void setup()
   setupAccelerometer();
   setupGyroscope();
   setupMagnetometer();
-  
+
   delay(500);
-  
+
   quaternion_init(&quat);
   quaternion_init(&quat_remote1);
   quaternion_init(&quat_remote2);
@@ -110,14 +110,14 @@ void loop() //Main Loop
 {
   if (IS_SPI_MASTER)
     checkSerial();
-  
+
   readAccelerometer();
   readGyroscope();
-  readMagnetometer();     
-        
+  readMagnetometer();
+
   sensor_fusion(&quat, &accel, &mag, &gyro, weight);
   //digitalWrite(STATUS_LED,HIGH);
-  
+
   if (IS_SPI_MASTER) {
     //for (int i=0; i < 16; i++) {
     //  digitalWrite(SPI_SS, LOW);
@@ -196,7 +196,7 @@ void loop() //Main Loop
 
       //slipOutDouble(period);
       Serial.write(delimiterChar);
-      
+
       polled = 0;
       digitalWrite(STATUS_LED, LOW);
     }
@@ -231,7 +231,3 @@ void loop() //Main Loop
   }
 }
 
-
-
-
-   
