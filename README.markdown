@@ -18,4 +18,4 @@ Joseph Malloch 2011
 [1]: http://idmil.org/projects/gestes
 [2]: http://www.youtube.com/watch?v=-Dqvf1CXPWg
 [3]: http://store.ckdevices.com/products/Mongoose-9DoF-IMU-with-Barometric-Pressure-Sensor-.html
-[2]: http://idmil.org
+[4]: http://idmil.org
